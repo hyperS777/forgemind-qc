@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sarvam AI - Audio Processing</title>
+    <!-- Google Fonts: Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+    <div class="app-container">
+        <header class="app-header">
+            <div class="logo">
+                <div class="logo-icon"></div>
+                <h1>Sarvam AI Studio</h1>
+            </div>
+            <p class="subtitle">Indic-native Audio Processing</p>
+        </header>
+
+        <main class="main-content">
+            <div class="card glass-panel">
+                <div class="status-indicator" id="statusIndicator">Ready</div>
+                
+                <div class="mic-container">
+                    <button id="recordBtn" class="mic-btn">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mic-icon">
+                            <path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"></path>
+                            <path d="M19 10v2a7 7 0 0 1-14 0v-2"></path>
+                            <line x1="12" y1="19" x2="12" y2="23"></line>
+                            <line x1="8" y1="23" x2="16" y2="23"></line>
+                        </svg>
+                    </button>
+                    <div class="recording-ring" id="recordingRing"></div>
+                </div>
+                
+                <p class="instruction" id="instructionText">Tap to start recording</p>
+                
+                <div class="audio-player hidden" id="audioPlayerContainer">
+                    <audio id="audioPlayback" controls></audio>
+                </div>
+                
+                <div class="action-buttons hidden" id="actionButtons">
+                    <button id="discardBtn" class="btn btn-secondary">Discard</button>
+                    <button id="processBtn" class="btn btn-primary">Process with Sarvam</button>
+                </div>
+            </div>
+
+            <div class="result-panel glass-panel hidden" id="resultPanel">
+                <h3>Transcription Result</h3>
+                <div class="loader hidden" id="loader">
+                    <div class="spinner"></div>
+                    <p>Processing via Saaras model...</p>
+                </div>
+                <div class="transcript-box" id="transcriptBox"></div>
+                <div class="payload-box hidden" id="payloadBox">
+                    <h4>Full Response Payload</h4>
+                    <pre id="payloadContent"></pre>
+                </div>
+                <div class="error-box hidden" id="errorBox"></div>
+            </div>
+        </main>
+    </div>
+
+    <script src="/static/main.js"></script>
+</body>
+</html>

@@ -20,7 +20,11 @@ class IncidentViewModel : ViewModel() {
 
     fun analyze(
         imageFile: File?,
-        audioFile: File?
+        audioFile: File?,
+        temperature: Double,
+        current: Double,
+        rpm: Int,
+        anomalyScore: Double
     ) {
         viewModelScope.launch {
 
@@ -30,7 +34,11 @@ class IncidentViewModel : ViewModel() {
 
                 _diagnosis.value = repository.analyze(
                     imageFile,
-                    audioFile
+                    audioFile,
+                    temperature,
+                    current,
+                    rpm,
+                    anomalyScore
                 )
 
             } catch (e: Exception) {

@@ -38,6 +38,11 @@ fun ForgeMindBottomBar(
         BottomNavItem(
             "History",
             NavRoutes.History.route,
+            Icons.Default.History
+        ),
+        BottomNavItem(
+            "Alerts",
+            NavRoutes.Alerts.route,
             Icons.Default.Notifications
         ),
         BottomNavItem(

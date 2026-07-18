@@ -1,12 +1,16 @@
 package com.forgemind.android.ui.navigation
 
 import androidx.compose.ui.Modifier
+import androidx.compose.runtime.rememberCoroutineScope
+import kotlinx.coroutines.launch
+import com.forgemind.android.network.RetrofitClient
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.forgemind.android.ui.history.HistoryScreen
+import com.forgemind.android.ui.alerts.AlertsScreen
 import com.forgemind.android.ui.home.HomeScreen
 import com.forgemind.android.ui.manuals.ManualScreen
 import com.forgemind.android.ui.profile.ProfileScreen
@@ -16,7 +20,9 @@ import androidx.compose.foundation.layout.padding
 @Composable
 fun ForgeMindNavGraph(
     navController: NavHostController,
-    padding: PaddingValues
+    padding: PaddingValues,
+    hasUnreadNotification: Boolean = false,
+    onNotificationClick: () -> Unit = {}
 ) {
 
     NavHost(
@@ -27,14 +33,17 @@ fun ForgeMindNavGraph(
 
         composable(NavRoutes.Home.route) {
             HomeScreen(
-                onAlertClick = {
-                    navController.navigate(NavRoutes.Incident.route)
-                }
+                hasUnreadNotification = hasUnreadNotification,
+                onNotificationClick = onNotificationClick
             )
         }
 
         composable(NavRoutes.History.route) {
             HistoryScreen()
+        }
+
+        composable(NavRoutes.Alerts.route) {
+            AlertsScreen(navController)
         }
 
         composable(NavRoutes.Manuals.route) {

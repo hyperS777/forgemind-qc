@@ -9,7 +9,11 @@ class DiagnosisRepository {
 
     suspend fun analyze(
         imageFile: File?,
-        audioFile: File?
+        audioFile: File?,
+        temperature: Double,
+        current: Double,
+        rpm: Int,
+        anomalyScore: Double
     ): Diagnosis {
 
         return RetrofitClient.api.analyze(
@@ -18,13 +22,13 @@ class DiagnosisRepository {
 
             audio = MultipartHelper.audioPart(audioFile),
 
-            temperature = MultipartHelper.text("47.2"),
+            temperature = MultipartHelper.text(temperature.toString()),
 
-            current = MultipartHelper.text("0.41"),
+            current = MultipartHelper.text(current.toString()),
 
-            rpm = MultipartHelper.text("2420"),
+            rpm = MultipartHelper.text(rpm.toString()),
 
-            anomalyScore = MultipartHelper.text("0.87")
+            anomalyScore = MultipartHelper.text(anomalyScore.toString())
 
         )
 

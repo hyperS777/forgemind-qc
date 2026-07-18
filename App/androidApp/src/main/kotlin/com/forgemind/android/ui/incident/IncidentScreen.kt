@@ -1,10 +1,21 @@
 package com.forgemind.android.ui.incident
 
+import android.content.Intent
+import android.provider.Settings
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
+import android.Manifest
+import android.content.pm.PackageManager
+import android.os.Build
+import androidx.core.content.ContextCompat
 import com.forgemind.android.network.AudioFileHelper
 import com.forgemind.android.network.ImageFileHelper
+import com.forgemind.android.network.RetrofitClient
 import android.graphics.Bitmap
 import android.net.Uri
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -12,8 +23,10 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.CameraAlt
 import androidx.compose.material.icons.filled.GraphicEq
+import androidx.compose.material.icons.filled.Notifications
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.layout.ContentScale
@@ -21,6 +34,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import kotlinx.coroutines.delay
+import com.forgemind.android.util.NotificationHelper
 
 import com.forgemind.android.ui.audio.AudioRecorder
 import com.forgemind.android.ui.audio.rememberAudioPermission
@@ -32,7 +46,9 @@ import com.forgemind.android.ui.gallery.rememberGalleryPicker
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.compose.runtime.collectAsState
 import com.forgemind.android.viewmodel.IncidentViewModel
+import com.forgemind.android.model.LatestPayload
 import java.io.File
+
 @Composable
 fun IncidentScreen(
     onManualClick: () -> Unit
@@ -85,7 +101,9 @@ fun IncidentScreen(
         mutableStateOf("Processing input...")
     }
 
-
+    var backendUrl by rememberSaveable {
+        mutableStateOf("")
+    }
 
     //---------------- HELPERS ----------------//
 
@@ -113,9 +131,37 @@ fun IncidentScreen(
 
     val viewModel: IncidentViewModel = viewModel()
 
+    var showAnomalyDialog by rememberSaveable { mutableStateOf(false) }
+    var hasNotified by rememberSaveable { mutableStateOf(false) }
+    var showNotificationIcon by rememberSaveable { mutableStateOf(false) }
+    val snackbarHostState = remember { SnackbarHostState() }
+    
+    var livePayload by remember { mutableStateOf<LatestPayload?>(null) }
+    
+    LaunchedEffect(Unit) {
+        while (true) {
+            try {
+                livePayload = RetrofitClient.api.latestPayload()
+            } catch (e: Exception) {}
+            delay(3000)
+        }
+    }
+
     val diagnosis by viewModel.diagnosis.collectAsState()
 
     val loading by viewModel.isLoading.collectAsState()
+
+    val permissionLauncher = rememberLauncherForActivityResult(
+        ActivityResultContracts.RequestPermission()
+    ) { isGranted ->
+        if (!isGranted) {
+            android.util.Log.d("IncidentScreen", "Notification permission denied")
+        }
+    }
+
+    LaunchedEffect(Unit) {
+        backendUrl = RetrofitClient.getBaseUrl(context)
+    }
 
     val openGallery =
         rememberGalleryPicker {
@@ -194,23 +240,115 @@ fun IncidentScreen(
         showDiagnosis = true
     }
 
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .verticalScroll(rememberScrollState())
-            .padding(20.dp)
-    ) {
-        Text(
-            text = "Incident",
-            style = MaterialTheme.typography.headlineMedium
-        )
+    // Trigger an in-app dialog and a system notification when a severe diagnosis arrives
+    LaunchedEffect(diagnosis) {
+        val d = diagnosis ?: return@LaunchedEffect
+        android.util.Log.i("ForgeMind", "Diagnosis received: ${d.fault} severity=${d.severity} confidence=${d.confidence}")
+        showDiagnosis = true
 
-        Spacer(Modifier.height(8.dp))
+        val sev = d.severity
+        if (sev.equals("High", ignoreCase = true) && !hasNotified) {
+            var permissionGranted = true
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                val status = ContextCompat.checkSelfPermission(context, Manifest.permission.POST_NOTIFICATIONS)
+                permissionGranted = status == PackageManager.PERMISSION_GRANTED
+                if (!permissionGranted) {
+                    permissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
+                }
+            }
 
-        Text(
-            text = "Machine ID : FAN-01",
-            style = MaterialTheme.typography.titleMedium
+            if (permissionGranted) {
+                NotificationHelper.showAnomalyNotification(context, "Anomaly detected: ${d.fault}", d.summary)
+            } else {
+                val result = snackbarHostState.showSnackbar(
+                    message = "Notification permission required to show outside-app alerts.",
+                    actionLabel = "Settings"
+                )
+                if (result == SnackbarResult.ActionPerformed) {
+                    val intent = Intent(Settings.ACTION_APP_NOTIFICATION_SETTINGS).apply {
+                        putExtra(Settings.EXTRA_APP_PACKAGE, context.packageName)
+                    }
+                    context.startActivity(intent)
+                }
+            }
+
+            // also show a quick Toast so it's visible immediately on-device
+            try { android.widget.Toast.makeText(context, "Anomaly: ${d.fault}", android.widget.Toast.LENGTH_LONG).show() } catch(_: Exception) {}
+            try { snackbarHostState.showSnackbar("Anomaly: ${d.fault}") } catch(_: Exception) {}
+            hasNotified = true
+            showNotificationIcon = true
+            showAnomalyDialog = true
+        } else if (sev.equals("Warning", ignoreCase = true)) {
+            showNotificationIcon = true
+            try { snackbarHostState.showSnackbar("Warning detected: ${d.fault}") } catch(_: Exception) {}
+        }
+    }
+
+    val dLocal = diagnosis
+    if (showAnomalyDialog && dLocal != null) {
+        AlertDialog(
+            onDismissRequest = { showAnomalyDialog = false },
+            confirmButton = {
+                TextButton(onClick = { showDiagnosis = true; showAnomalyDialog = false }) {
+                    Text("View Details")
+                }
+            },
+            dismissButton = {
+                TextButton(onClick = { showAnomalyDialog = false }) { Text("Dismiss") }
+            },
+            title = { Text("Anomaly Detected: ${dLocal.fault}") },
+            text = { Text(dLocal.summary + "\nRecommendation: " + dLocal.recommendation) }
         )
+    }
+
+    Scaffold(
+        snackbarHost = { SnackbarHost(hostState = snackbarHostState) }
+    ) { innerPadding ->
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .verticalScroll(rememberScrollState())
+                .padding(innerPadding)
+                .padding(20.dp)
+        ) {
+
+        Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
+            Column {
+                Text(
+                    text = "Incident",
+                    style = MaterialTheme.typography.headlineMedium
+                )
+
+                Spacer(Modifier.height(8.dp))
+
+                Text(
+                    text = "Machine ID : FAN-01",
+                    style = MaterialTheme.typography.titleMedium
+                )
+
+                Spacer(Modifier.height(8.dp))
+
+                Text(
+                    text = "Backend: ${RetrofitClient.getBaseUrl(context)}",
+                    style = MaterialTheme.typography.bodySmall
+                )
+            }
+
+            IconButton(onClick = {
+                showAnomalyDialog = true
+            }) {
+                Box {
+                    Icon(Icons.Default.Notifications, contentDescription = "Notifications")
+                    if (showNotificationIcon) {
+                        Box(modifier = Modifier
+                            .size(8.dp)
+                            .offset(x = 12.dp, y = (-4).dp)
+                            .background(MaterialTheme.colorScheme.error, shape = CircleShape)
+                        )
+                    }
+                }
+            }
+        }
 
         Spacer(Modifier.height(20.dp))
 
@@ -228,14 +366,60 @@ fun IncidentScreen(
                 )
 
                 Spacer(Modifier.height(12.dp))
-
-                Text("Temperature : 47.2°C")
-                Text("Current : 0.41 A")
-                Text("RPM : 2420")
-                Text("Anomaly Score : 0.87")
+                
+                val t = livePayload?.telemetry
+                Text("Temperature : ${t?.temperature ?: "--"}°C")
+                Text("Current : ${t?.current ?: "--"} A")
+                Text("RPM : ${t?.rpm ?: "--"}")
+                Text("Anomaly Score : ${t?.anomalyScore ?: "--"}")
 
             }
 
+        }
+
+        Spacer(Modifier.height(24.dp))
+
+        Card(
+            shape = RoundedCornerShape(18.dp)
+        ) {
+            Column(
+                modifier = Modifier.padding(16.dp)
+            ) {
+                Text(
+                    "Backend Connection",
+                    style = MaterialTheme.typography.titleMedium
+                )
+
+                Spacer(Modifier.height(8.dp))
+
+                Text(
+                    "Enter the PC backend URL on your Wi-Fi network, for example http://192.168.1.20:8000"
+                )
+
+                Spacer(Modifier.height(12.dp))
+
+                OutlinedTextField(
+                    value = backendUrl,
+                    onValueChange = { backendUrl = it },
+                    label = { Text("Backend URL") },
+                    singleLine = true,
+                    modifier = Modifier.fillMaxWidth()
+                )
+
+                Spacer(Modifier.height(8.dp))
+
+                Button(
+                    onClick = {
+                        val trimmedUrl = backendUrl.trim()
+                        if (trimmedUrl.isNotEmpty()) {
+                            RetrofitClient.setBaseUrl(trimmedUrl, context)
+                        }
+                    },
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    Text("Save Backend URL")
+                }
+            }
         }
 
         Spacer(Modifier.height(24.dp))
@@ -379,15 +563,26 @@ fun IncidentScreen(
         }
 
         Spacer(Modifier.height(24.dp))
-        Button(
-            onClick = {
-                showDiagnosis = false
-                viewModel.analyze(
-                    imageFile,
-                    audioFile
-                )
-            },
-            enabled = canAnalyze,
+            Button(
+                onClick = {
+                    if (backendUrl.isNotBlank()) {
+                        RetrofitClient.setBaseUrl(backendUrl.trim(), context)
+                    }
+                    showDiagnosis = false
+                    showAnomalyDialog = false
+                    showNotificationIcon = false
+                    hasNotified = false
+                    val t = livePayload?.telemetry
+                    viewModel.analyze(
+                        imageFile,
+                        audioFile,
+                        t?.temperature ?: 45.0,
+                        t?.current ?: 0.4,
+                        t?.rpm ?: 2400,
+                        t?.anomalyScore ?: 0.0
+                    )
+                },
+                enabled = canAnalyze,
             modifier = Modifier.fillMaxWidth()
         ) {
 
@@ -428,7 +623,7 @@ fun IncidentScreen(
                     AssistChip(
                         onClick = {},
                         label = {
-                            Text("High Confidence • 96%")
+                            Text("${diagnosis!!.severity} • ${diagnosis!!.confidence}%")
                         }
                     )
 
@@ -453,7 +648,7 @@ fun IncidentScreen(
                     Spacer(Modifier.height(6.dp))
 
                     Text(
-                        text = "The collected evidence indicates abnormal vibration caused by a bent cooling fan blade. Continued operation may reduce cooling efficiency and increase mechanical stress."
+                        text = diagnosis!!.summary
                     )
 
                     Spacer(Modifier.height(16.dp))
@@ -466,7 +661,7 @@ fun IncidentScreen(
                     Spacer(Modifier.height(6.dp))
 
                     Text(
-                        text = "Inspect the fan assembly, replace the damaged blade, verify blade balance, and perform a short operational test before returning the unit to service."
+                        text = diagnosis!!.recommendation
                     )
 
                     Spacer(Modifier.height(20.dp))
@@ -487,4 +682,5 @@ fun IncidentScreen(
 
     }
 
+}
 }

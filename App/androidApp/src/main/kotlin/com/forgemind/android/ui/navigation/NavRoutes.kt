@@ -6,6 +6,8 @@ sealed class NavRoutes(val route: String) {
 
     data object History : NavRoutes("history")
 
+    data object Alerts : NavRoutes("alerts")
+
     data object Incident : NavRoutes("incident")
 
     data object Processing : NavRoutes("processing")

@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+  <meta http-equiv="Pragma" content="no-cache" />
+  <meta http-equiv="Expires" content="0" />
+  <title>ForgeMind — Snapdragon AI PC</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <!-- ANOMALY POPUP CARD -->
+  <div class="anomaly-popup" id="anomalyPopup">
+    <div class="anomaly-popup-content">
+      <div class="anomaly-popup-header">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+        <span>Anomaly Detected</span>
+      </div>
+      <p>High anomaly score from Arduino telemetry. An incident analysis is recommended.</p>
+      <div class="anomaly-popup-actions">
+        <button class="btn-ghost" id="dismissAnomalyBtn">Dismiss</button>
+        <button class="btn-primary" id="analyzeAnomalyBtn">Analyze Now</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-brand">
+      <div class="brand-icon">
+        <svg width="28" height="28" viewBox="0 0 28 28" fill="none">
+          <path d="M14 2L26 8V20L14 26L2 20V8L14 2Z" stroke="url(#g1)" stroke-width="2" fill="none"/>
+          <path d="M14 10L20 13V19L14 22L8 19V13L14 10Z" fill="url(#g1)" opacity="0.6"/>
+          <circle cx="14" cy="14" r="3" fill="url(#g1)"/>
+          <defs><linearGradient id="g1" x1="0" y1="0" x2="28" y2="28"><stop stop-color="#6366f1"/><stop offset="1" stop-color="#a78bfa"/></linearGradient></defs>
+        </svg>
+      </div>
+      <div class="brand-text">
+        <span class="brand-name">ForgeMind</span>
+        <span class="brand-tag">AI PC Hub</span>
+      </div>
+    </div>
+
+    <nav class="sidebar-nav">
+      <a href="#" class="nav-item active" data-page="home" id="nav-home">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+        <span>Home</span>
+      </a>
+      <a href="#" class="nav-item" data-page="incident" id="nav-incident">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+        <span>Incident Analysis</span>
+      </a>
+      <a href="#" class="nav-item" data-page="knowledge" id="nav-knowledge">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+        <span>Maintenance Manual</span>
+      </a>
+      <a href="#" class="nav-item" data-page="chat" id="nav-chat">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+        <span>ForgeMind Chat</span>
+      </a>
+      <a href="#" class="nav-item" data-page="history" id="nav-history">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+        <span>History</span>
+      </a>
+      <a href="#" class="nav-item" data-page="settings" id="nav-settings">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+        <span>Settings</span>
+      </a>
+    </nav>
+
+    <div class="sidebar-footer">
+      <div class="connection-status" id="connectionStatus">
+        <span class="status-dot offline"></span>
+        <span class="status-text">Backend Offline</span>
+      </div>
+      <button class="btn-reconnect" id="reconnectBtn">Change Server</button>
+      <div class="sidebar-version">Qualcomm Hackathon · Jul 2026</div>
+    </div>
+  </aside>
+
+  <!-- MAIN -->
+  <main class="main-content">
+    <header class="topbar">
+      <div class="topbar-left">
+        <button class="menu-toggle" id="menuToggle">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+        </button>
+        <h1 class="page-title" id="pageTitle">Home</h1>
+      </div>
+      <div class="topbar-right">
+        <div class="topbar-machine">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg>
+          <span>FAN-01</span>
+        </div>
+
+        <button class="topbar-send-phone" id="topbarSendPhone" title="Send current anomaly data to phone">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="5" y="2" width="14" height="20" rx="2" ry="2"/><line x1="12" y1="18" x2="12.01" y2="18"/></svg>
+          <span>Send to Phone</span>
+        </button>
+
+        <div class="topbar-notif" id="topbarNotif">
+          <button id="notifBtn" class="notif-btn" aria-label="Notifications">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 17h5l-1.405-1.405A2.032 2.032 0 0 1 18 14.158V11a6 6 0 0 0-5-5.917V4a1 1 0 0 0-2 0v1.083A6 6 0 0 0 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0a3 3 0 1 1-6 0h6z"/></svg>
+            <span class="notif-badge" id="notifBadge" style="display:none"></span>
+          </button>
+          <div class="notif-panel hidden" id="notifPanel"></div>
+        </div>
+
+        <div class="backend-tag" id="backendTag">
+          <span class="status-dot-sm offline"></span>
+          <span id="backendUrlDisplay">localhost:8000</span>
+        </div>
+        <div class="topbar-clock" id="topbarClock"></div>
+      </div>
+    </header>
+
+    <!-- PAGE: HOME -->
+    <section class="page active" id="page-home">
+      <!-- ARCHITECTURE BANNER -->
+      <div class="arch-banner">
+        <div class="arch-node highlight">
+          <div class="arch-icon phone"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="5" y="2" width="14" height="20" rx="2" ry="2"/><line x1="12" y1="18" x2="12.01" y2="18"/></svg></div>
+          <span class="arch-label">Snapdragon Phone</span>
+          <span class="arch-sub">Camera · Audio · Gemma LLM</span>
+        </div>
+        <div class="arch-arrow">
+          <svg width="40" height="20" viewBox="0 0 40 20"><path d="M0 10h32M28 4l8 6-8 6" stroke="var(--accent-light)" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          <span class="arch-arrow-label">HTTP / Multipart</span>
+        </div>
+        <div class="arch-node">
+          <div class="arch-icon pc"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg></div>
+          <span class="arch-label">AI PC (Data Hub)</span>
+          <span class="arch-sub">Telemetry · Aggregator · DB</span>
+        </div>
+        <div class="arch-arrow">
+          <svg width="40" height="20" viewBox="0 0 40 20"><path d="M0 10h32M28 4l8 6-8 6" stroke="var(--accent-light)" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          <span class="arch-arrow-label">MQTT (Live Data)</span>
+        </div>
+        <div class="arch-node">
+          <div class="arch-icon arduino"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="4" width="16" height="16" rx="2"/><circle cx="9" cy="12" r="1"/><circle cx="15" cy="12" r="1"/></svg></div>
+          <span class="arch-label">Arduino UNO Q</span>
+          <span class="arch-sub">Sensors</span>
+        </div>
+      </div>
+
+      <!-- STATUS -->
+      <div class="status-bar">
+        <div class="status-card" id="statusOverall">
+          <div class="status-card-icon healthy"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg></div>
+          <div class="status-card-info"><span class="status-card-label">Machine Status</span><span class="status-card-value" id="machineStatusText">Healthy</span></div>
+        </div>
+        <div class="status-card">
+          <div class="status-card-icon neutral"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg></div>
+          <div class="status-card-info"><span class="status-card-label">Total Diagnoses</span><span class="status-card-value" id="totalDiagnoses">0</span></div>
+        </div>
+      </div>
+
+      <!-- GAUGES -->
+      <div class="section-header"><h2>Live Telemetry</h2><span class="badge live-badge" id="telemetryBadge"><span class="live-dot"></span> Waiting for Data…</span></div>
+      <div class="gauge-grid">
+        <div class="gauge-card"><div class="gauge-header"><span class="gauge-label">Temperature</span><span class="gauge-unit">°C</span></div><div class="gauge-ring-container"><svg class="gauge-ring" viewBox="0 0 120 120"><circle class="gauge-bg" cx="60" cy="60" r="52"/><circle class="gauge-fill temp-fill" cx="60" cy="60" r="52" id="tempRing"/></svg><div class="gauge-value" id="tempValue">--</div></div><div class="gauge-range"><span>0</span><span>100</span></div></div>
+        <div class="gauge-card"><div class="gauge-header"><span class="gauge-label">Current</span><span class="gauge-unit">A</span></div><div class="gauge-ring-container"><svg class="gauge-ring" viewBox="0 0 120 120"><circle class="gauge-bg" cx="60" cy="60" r="52"/><circle class="gauge-fill current-fill" cx="60" cy="60" r="52" id="currentRing"/></svg><div class="gauge-value" id="currentValue">--</div></div><div class="gauge-range"><span>0</span><span>2.0</span></div></div>
+        <div class="gauge-card"><div class="gauge-header"><span class="gauge-label">RPM</span><span class="gauge-unit">rev/min</span></div><div class="gauge-ring-container"><svg class="gauge-ring" viewBox="0 0 120 120"><circle class="gauge-bg" cx="60" cy="60" r="52"/><circle class="gauge-fill rpm-fill" cx="60" cy="60" r="52" id="rpmRing"/></svg><div class="gauge-value" id="rpmValue">--</div></div><div class="gauge-range"><span>0</span><span>5000</span></div></div>
+        <div class="gauge-card"><div class="gauge-header"><span class="gauge-label">Anomaly</span><span class="gauge-unit">σ</span></div><div class="gauge-ring-container"><svg class="gauge-ring" viewBox="0 0 120 120"><circle class="gauge-bg" cx="60" cy="60" r="52"/><circle class="gauge-fill anomaly-fill" cx="60" cy="60" r="52" id="anomalyRing"/></svg><div class="gauge-value" id="anomalyValue">--</div></div><div class="gauge-range"><span>0</span><span>10</span></div></div>
+      </div>
+
+      <!-- CHART -->
+      <div class="section-header" style="margin-top:24px;"><h2>Telemetry History</h2><div class="chart-controls"><button class="chart-btn active" data-metric="temp_c">Temp</button><button class="chart-btn" data-metric="current_a">Current</button><button class="chart-btn" data-metric="rpm">RPM</button><button class="chart-btn" data-metric="anomaly_score">Anomaly</button></div></div>
+      <div class="chart-container"><canvas id="telemetryChart"></canvas></div>
+    </section>
+
+    <!-- PAGE: INCIDENT ANALYSIS -->
+    <section class="page" id="page-incident">
+      <div class="incident-layout">
+        <!-- LEFT: Received Data Hub -->
+        <div class="incident-left">
+          <div class="section-header"><h2>1. Received Data Hub</h2></div>
+          <p class="page-description">Processing sensor telemetry and multimodal inputs from the phone.</p>
+          
+          <div class="acquisition-grid">
+            <div class="acq-card">
+              <h3>Vision Payload</h3>
+              <input type="file" id="imageInput" accept="image/*" class="acq-file-input" />
+              <img id="imagePreview" class="acq-preview-image" />
+              <div class="acq-status" id="statusImage">Waiting for image payload...</div>
+            </div>
+
+            <div class="acq-card">
+              <h3>Audio Payload</h3>
+              <input type="file" id="audioInput" accept="audio/*" class="acq-file-input" />
+              <audio id="audioPreview" controls class="acq-preview-audio"></audio>
+              <div class="acq-status" id="statusAudio">Waiting for audio payload...</div>
+            </div>
+            
+            <div class="acq-card full-width">
+              <h3>Live Telemetry Snapshot</h3>
+              <div class="telemetry-snapshot">
+                <div class="ts-item"><span class="ts-label">Temp</span><span class="ts-val" id="snapTemp">--°C</span></div>
+                <div class="ts-item"><span class="ts-label">Current</span><span class="ts-val" id="snapCurrent">--A</span></div>
+                <div class="ts-item"><span class="ts-label">RPM</span><span class="ts-val" id="snapRpm">--</span></div>
+                <div class="ts-item"><span class="ts-label">Anomaly</span><span class="ts-val" id="snapAnomaly">--</span></div>
+              </div>
+            </div>
+          </div>
+          
+          <button class="btn-primary btn-large" id="analyzeBtn" style="width:100%;margin-top:20px;justify-content:center;">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+            Send Anomaly Payload to Phone LLM
+          </button>
+          <div id="phoneSentStatus" class="phone-sent-badge" style="display:none; margin-top:12px;">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
+            <span>Notification delivered to phone</span>
+          </div>
+        </div>
+
+        <!-- RIGHT: Pipeline & Results -->
+        <div class="incident-right">
+          <div class="section-header"><h2>2. Data Processing Pipeline</h2></div>
+          <div class="pipeline-flow compact">
+            <div class="pipe-stage" id="stage-vision"><div class="pipe-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="13" r="4"/></svg></div><div class="pipe-info"><span class="pipe-title">Receive Payload</span></div><span class="pipe-status idle">Idle</span></div>
+            <div class="pipe-connector"></div>
+            <div class="pipe-stage" id="stage-audio"><div class="pipe-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v20M17 5v14M7 5v14M22 8v8M2 8v8"/></svg></div><div class="pipe-info"><span class="pipe-title">Telemetry Match</span></div><span class="pipe-status idle">Idle</span></div>
+            <div class="pipe-connector"></div>
+            <div class="pipe-stage" id="stage-rag"><div class="pipe-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/></svg></div><div class="pipe-info"><span class="pipe-title">Log to DB</span></div><span class="pipe-status idle">Idle</span></div>
+            <div class="pipe-connector"></div>
+            <div class="pipe-stage" id="stage-gemma"><div class="pipe-icon gemma-icon" style="color:var(--accent-light); background:var(--accent-surface);"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg></div><div class="pipe-info"><span class="pipe-title">Dispatch to Phone</span></div><span class="pipe-status idle">Idle</span></div>
+          </div>
+
+          <div class="section-header" style="margin-top:24px;"><h2>3. Diagnosis Result</h2></div>
+          <div class="diagnosis-result hidden" id="diagnosisResult">
+            <div class="result-header"><h3>Diagnosis</h3><span class="severity-badge" id="resultSeverity"></span></div>
+            <div class="result-body">
+              <div class="result-field"><span class="result-label">Identified Fault</span><span class="result-value" id="resultFault"></span></div>
+              <div class="result-field"><span class="result-label">AI Confidence</span><div class="confidence-bar-container"><div class="confidence-bar" id="resultConfidenceBar"></div><span class="confidence-text" id="resultConfidence"></span></div></div>
+              <div class="result-field"><span class="result-label">Reasoning</span><span class="result-value" id="resultSummary"></span></div>
+              <div class="result-field"><span class="result-label">Action Required</span><span class="result-value recommendation" id="resultRecommendation"></span></div>
+            </div>
+            <div class="result-footer">
+              <button class="btn-ghost" onclick="document.getElementById('nav-chat').click()">Ask ForgeMind Chat →</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- PAGE: KNOWLEDGE -->
+    <section class="page" id="page-knowledge">
+      <div class="section-header"><h2>Maintenance Manual</h2><span class="badge">5 fault entries</span></div>
+      <p class="page-description">RAG retrieval source — each entry matches AI pipeline findings to a known fault.</p>
+      <div class="knowledge-grid" id="knowledgeGrid"></div>
+    </section>
+
+    <!-- PAGE: CHAT (NEW) -->
+    <section class="page" id="page-chat">
+      <div class="chat-container">
+        <div class="chat-header">
+          <div class="chat-avatar"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2L26 8V20L14 26L2 20V8L14 2Z" transform="translate(-2,-2) scale(0.9)" stroke="var(--accent-light)"/></svg></div>
+          <div class="chat-title">
+            <h3>ForgeMind Assistant</h3>
+            <span>Powered by Gemma</span>
+          </div>
+        </div>
+        <div class="chat-messages" id="chatMessages">
+          <div class="chat-msg ai">
+            <div class="msg-bubble">Hello! I am ForgeMind. I can help you understand the recent diagnosis or guide you through the repair steps from the maintenance manual.</div>
+          </div>
+        </div>
+        <div class="chat-input-area">
+          <input type="text" id="chatInput" placeholder="Ask about the diagnosis or repair..." />
+          <button class="btn-primary" id="chatSendBtn"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg></button>
+        </div>
+      </div>
+    </section>
+
+    <!-- PAGE: HISTORY -->
+    <section class="page" id="page-history">
+      <div class="section-header"><h2>Diagnosis History</h2></div>
+      <div class="diagnosis-history" id="diagnosisHistory"><div class="event-empty"><span>No diagnoses recorded yet.</span></div></div>
+    </section>
+
+    <!-- PAGE: SETTINGS -->
+    <section class="page" id="page-settings">
+      <div class="section-header"><h2>Settings</h2></div>
+      <div class="settings-panel">
+        <div class="settings-group">
+          <h3>FastAPI Backend</h3>
+          <div class="form-row"><div class="form-group"><label for="settingsBackendUrl">Backend URL</label><input type="url" id="settingsBackendUrl" placeholder="http://192.168.1.10:8000" /></div></div>
+          <button class="btn-primary" id="testConnectionBtn"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg> Test Connection</button>
+          <div class="connection-test-result" id="connectionTestResult"></div>
+        </div>
+        <div class="settings-group">
+          <h3>Telemetry Simulator</h3>
+          <p class="settings-desc">Simulated sensor data for testing without Arduino hardware.</p>
+          <div class="toggle-row"><label for="simToggle">Enable Simulator</label><label class="toggle"><input type="checkbox" id="simToggle" /><span class="toggle-slider"></span></label></div>
+          <div class="sim-controls hidden" id="simControls"><div class="form-row"><div class="form-group"><label for="simScenario">Fault Scenario</label><select id="simScenario"><option value="healthy">Healthy Operation</option><option value="bent_blade">Bent Fan Blade</option><option value="dust_buildup">Dust Buildup</option><option value="worn_bearing">Worn Bearing</option><option value="loose_mount">Loose Mount</option><option value="motor_overload">Motor Overload</option></select></div></div></div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Toast notifications -->
+  <div class="toast-container" id="toastContainer"></div>
+
+  <script src="app.js?v=3" defer></script>
+</body>
+</html>
