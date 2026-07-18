@@ -1,0 +1,89 @@
+[
+  {
+    "id": "bent_blade",
+    "title": "Bent Fan Blade / Blade-Housing Interference",
+    "symptoms": "Periodic scraping or clicking sound, once per rotation. Elevated spectral centroid in audio. Vision shows visibly bent or misaligned blade. Mild temperature rise. Current draw slightly above nominal. RPM near normal, not sagging.",
+    "root_cause": "One or more blades deformed, causing intermittent contact with the grille or housing once per revolution.",
+    "repair_steps": [
+      "Power down and fully disconnect the fan from supply before touching it.",
+      "Remove the protective grille (typically 4 corner screws or snap clips).",
+      "Manually rotate the blade assembly by hand and confirm the contact point.",
+      "Straighten the bent blade with padded pliers using small, even, incremental adjustments.",
+      "Re-check clearance by spinning the blade by hand after each adjustment.",
+      "Reassemble the grille and re-power. Reset the anomaly baseline after repair."
+    ],
+    "safety": [
+      "Lockout power at the source before handling.",
+      "Wear eye protection when applying pressure to blades in case of sudden slippage.",
+      "Do not test-run a cracked blade even briefly."
+    ],
+    "tools": ["Padded/needle-nose pliers", "Small screwdriver set", "Multimeter (optional)"]
+  },
+  {
+    "id": "dust_buildup",
+    "title": "Dust / Debris Accumulation",
+    "symptoms": "Gradual temperature rise over time, slightly reduced RPM under load, faint continuous whooshing or muffled sound (not periodic scraping). Vision shows visible dust coating on blades or grille.",
+    "root_cause": "Accumulated dust adds mass and disrupts airflow, causing imbalance and reduced cooling efficiency.",
+    "repair_steps": [
+      "Power down and disconnect before cleaning.",
+      "Use compressed air or a soft brush to remove dust from blades and housing.",
+      "Wipe down grille and motor housing with a dry cloth.",
+      "Re-power and confirm temperature returns to baseline over a few minutes."
+    ],
+    "safety": [
+      "Do not use liquid cleaners near the motor housing.",
+      "Work in a ventilated area when using compressed air."
+    ],
+    "tools": ["Compressed air can", "Soft brush", "Dry cloth"]
+  },
+  {
+    "id": "worn_bearing",
+    "title": "Worn or Failing Bearing",
+    "symptoms": "Continuous, non-periodic grinding or rumbling noise (not once-per-rotation). Noticeable RPM sag under load. Temperature elevated more than expected for current draw. Current draw may spike intermittently.",
+    "root_cause": "Bearing wear increases friction continuously through the rotation, not at a single point per revolution.",
+    "repair_steps": [
+      "Power down and disconnect before inspection.",
+      "Spin the shaft by hand and feel for grinding, roughness, or play (looseness) in the bearing.",
+      "If play or roughness is present, replace the bearing or the full motor assembly depending on serviceability.",
+      "After replacement, run at low load first and monitor temperature before full operation."
+    ],
+    "safety": [
+      "Do not run a motor with a suspected failing bearing under full load — risk of seizure.",
+      "Allow the motor to cool fully before handling."
+    ],
+    "tools": ["Bearing puller (if serviceable)", "Replacement bearing or motor assembly", "Multimeter"]
+  },
+  {
+    "id": "loose_mount",
+    "title": "Loose Mounting / Vibration from Base",
+    "symptoms": "Elevated vibration anomaly score from IMU with no clear periodic audio signature. Vision shows no blade or dust abnormality. Temperature and current remain near nominal.",
+    "root_cause": "Mounting hardware has loosened, allowing the whole unit to vibrate rather than an internal component fault.",
+    "repair_steps": [
+      "Power down before inspecting mounting points.",
+      "Check and tighten all mounting screws/bolts.",
+      "Confirm the mounting surface itself is stable and not resonating.",
+      "Re-power and observe vibration score returns to baseline."
+    ],
+    "safety": [
+      "Support the unit before removing final mounting bolts to avoid drops."
+    ],
+    "tools": ["Screwdriver or wrench matching mount hardware"]
+  },
+  {
+    "id": "motor_overload",
+    "title": "Motor Electrical Overload",
+    "symptoms": "Sharp current spike well above nominal. RPM sagging or stalling. Rapid temperature rise. No periodic scraping sound. Vision shows no blade deformity.",
+    "root_cause": "Electrical fault (winding short, locked rotor, or supply issue) causing excess current draw.",
+    "repair_steps": [
+      "Power down immediately — do not continue running an overloaded motor.",
+      "Check for a physically locked rotor (obstruction preventing rotation).",
+      "Measure winding resistance with a multimeter and compare to spec.",
+      "If winding resistance is abnormal, replace the motor rather than repair."
+    ],
+    "safety": [
+      "Disconnect power before any electrical measurement.",
+      "Do not repeatedly power-cycle an overloaded motor — risk of fire."
+    ],
+    "tools": ["Multimeter", "Replacement motor (if winding fault confirmed)"]
+  }
+]
