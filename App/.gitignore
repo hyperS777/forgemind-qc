@@ -1,0 +1,65 @@
+# Android / IntelliJ / Gradle
+
+# Gradle build cache
+.gradle/
+
+# Build outputs
+**/build/
+*/build/
+
+# Local configuration file (sdk path, etc.)
+local.properties
+
+# Log files
+*.log
+
+# Android Studio
+.idea/
+*.iml
+
+# Keystore files (sensitive)
+*.jks
+*.keystore
+debug.keystore
+
+# Generated native files
+.externalNativeBuild/
+.cxx/
+
+# Kotlin/Native
+.konan/
+
+# Gradle wrapper jar (if accidentally present) - wrapper scripts should remain
+gradle-wrapper.jar
+
+# Gradle daemon and caches
+.gradle/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Misc build artifacts
+*.apk
+*.ap_ 
+*.aab
+
+# Google Services - API keys & secrets
+**/google-services.json
+
+# JetBrains metadata
+/out/
+
+# Crashlytics
+crashlytics.properties
+
+# IntelliJ/workspace specific files
+*.ipr
+*.iws
+
+# Ignore capture folder from Android Studio profiler
+/captures/
+
+# Misc
+/*.keystore
+
