@@ -104,51 +104,55 @@ flowchart TD
 # Hardware Components
 
 ```mermaid
-flowchart TB
+flowchart LR
 
-subgraph Hardware_Components
+subgraph H1["Arduino UNO R4 WiFi"]
+A["Main Controller"]
+end
 
-A[Arduino UNO R4 WiFi<br>Main Controller]
+subgraph H2["ADXL345"]
+B["Vibration Monitoring"]
+end
 
-B[ADXL345<br>Vibration Monitoring]
+subgraph H3["DHT11"]
+C["Temperature & Humidity"]
+end
 
-C[DHT11<br>Temperature & Humidity]
+subgraph H4["Relay Module"]
+D["Machine Shutdown"]
+end
 
-D[Relay Module<br>Machine Shutdown]
+subgraph H5["Buzzer"]
+E["Emergency Alert"]
+end
 
-E[Active Buzzer<br>Emergency Alert]
-
-F[Green LED<br>Healthy Status]
-
-G[Red LED<br>Fault Status]
-
+subgraph H6["LED Indicators"]
+F["System Status"]
 end
 ```
 
 # Software Stack
 
 ```mermaid
-flowchart TB
+flowchart LR
 
-subgraph Software_Stack
+subgraph S1["Embedded Layer"]
+A["Arduino IDE<br/>C++ Firmware"]
+end
 
-A[Arduino IDE<br>Embedded Firmware]
+subgraph S2["AI Layer"]
+B["Python<br/>Scikit-Learn<br/>Isolation Forest"]
+end
 
-B[Python<br>Data Processing]
+subgraph S3["Backend Layer"]
+C["FastAPI<br/>Uvicorn"]
+end
 
-C[Scikit-Learn<br>Isolation Forest]
+subgraph S4["Mobile Layer"]
+D["Kotlin<br/>Jetpack Compose<br/>Retrofit"]
+end
 
-D[FastAPI<br>Backend Services]
-
-E[Uvicorn<br>API Server]
-
-F[Kotlin<br>Android Application]
-
-G[Jetpack Compose<br>UI Framework]
-
-H[Retrofit<br>API Communication]
-
-I[LLM Engine<br>Root Cause Analysis]
-
+subgraph S5["Intelligence Layer"]
+E["LLM Engine<br/>Root Cause Analysis"]
 end
 ```
