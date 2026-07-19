@@ -1,0 +1,20 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+backend/venv/
+backend/.venv/
+.venv/
+venv/
+backend/uploads/audio/*
+backend/uploads/images/*
+!backend/uploads/audio/.gitkeep
+!backend/uploads/images/.gitkeep
+
+# Android / Kotlin / Gradle
+.gradle/
+build/
+local.properties
+.idea/
+*.iml
+.DS_Store
