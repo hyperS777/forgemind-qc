@@ -46,48 +46,109 @@ ForgeMind introduces an AI-driven pipeline that continuously monitors machine he
 # System Architecture
 
 ```mermaid
-sequenceDiagram
+flowchart TD
 
-    participant Sensor
-    participant Arduino
-    participant ML
-    participant LLM
-    participant API
-    participant Android
+    A[Industrial Machine]
 
-    Sensor->>Arduino: Temperature + Vibration Data
+    A --> B[ADXL345 Vibration Sensor]
+    A --> C[DHT11 Temperature & Humidity Sensor]
 
-    Arduino->>Arduino: Safety Checks
+    B --> D[Arduino UNO R4 WiFi]
+    C --> D
 
-    alt Critical Threshold Crossed
+    D --> E[Safety Layer]
 
-        Arduino->>Arduino: Relay OFF
-        Arduino->>Arduino: Buzzer ON
+    E --> F{Threshold Check}
 
-    end
+    F -->|Critical| G[Relay OFF]
+    F -->|Critical| H[Buzzer ON]
+    F -->|Critical| I[Red LED]
 
-    Arduino->>ML: Sensor Stream
+    D --> J[Serial Data Stream]
 
-    ML->>ML: Isolation Forest Inference
+    J --> K[Python Anomaly Detection]
 
-    alt Healthy
+    K --> L[Isolation Forest Model]
 
-        ML->>ML: Continue Monitoring
+    L -->|Healthy| M[Continue Monitoring]
 
-    else Anomaly
+    L -->|Anomaly| N[Raw Sensor Packet]
 
-        ML->>LLM: Raw Sensor Packet
+    N --> O[LLM Diagnostic Engine]
 
-        LLM->>LLM: Root Cause Analysis
+    O --> P[Root Cause Analysis]
+    O --> Q[Maintenance Recommendations]
+    O --> R[Severity Assessment]
 
-        LLM->>API: Diagnosis
+    P --> S[FastAPI Backend]
+    Q --> S
+    R --> S
 
-        API->>Android: Results
+    S --> T[Android Application]
 
-    end
-
-```
+    T --> U[Live Diagnosis Dashboard]
+    T --> V[Image Upload]
     T --> W[Audio Upload]
     T --> X[Audio Recording]
 
+```
+
+# System Workflow
+
+- ForgeMind continuously monitors industrial equipment using vibration and environmental sensors connected to an Arduino UNO R4. Sensor data is streamed to an anomaly detection engine powered by an Isolation Forest model trained on healthy operational behavior.
+
+- When abnormal patterns are detected, the raw sensor packet is forwarded to an LLM-powered diagnostic layer running on Qualcomm AI hardware. The model performs root-cause analysis, generates maintenance recommendations, and assigns severity levels.
+
+- Results are exposed through a FastAPI backend and visualized in a Kotlin-based Android application, enabling operators to receive actionable maintenance intelligence in real time.
+
+# Hardware Components
+
+```mermaid
+flowchart TB
+
+subgraph Hardware_Components
+
+A[Arduino UNO R4 WiFi<br>Main Controller]
+
+B[ADXL345<br>Vibration Monitoring]
+
+C[DHT11<br>Temperature & Humidity]
+
+D[Relay Module<br>Machine Shutdown]
+
+E[Active Buzzer<br>Emergency Alert]
+
+F[Green LED<br>Healthy Status]
+
+G[Red LED<br>Fault Status]
+
+end
+```
+
+# Software Stack
+
+```mermaid
+flowchart TB
+
+subgraph Software_Stack
+
+A[Arduino IDE<br>Embedded Firmware]
+
+B[Python<br>Data Processing]
+
+C[Scikit-Learn<br>Isolation Forest]
+
+D[FastAPI<br>Backend Services]
+
+E[Uvicorn<br>API Server]
+
+F[Kotlin<br>Android Application]
+
+G[Jetpack Compose<br>UI Framework]
+
+H[Retrofit<br>API Communication]
+
+I[LLM Engine<br>Root Cause Analysis]
+
+end
 ```
