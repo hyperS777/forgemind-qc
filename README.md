@@ -36,12 +36,12 @@ ForgeMind introduces an AI-driven pipeline that continuously monitors machine he
   - Root-cause analysis generation
 - Maintenance recommendations
   -Failure explanation
--Mobile Application
-  -Image Upload
-  -Audio Upload
-  -Audio Recording
-  -Sensor Data Submission
-  -Diagnosis Dashboard
+- Mobile Application
+  - Image Upload
+  - Audio Upload
+  - Audio Recording
+  - Sensor Data Submission
+  - Diagnosis Dashboard
 
 # System Architecture
 
@@ -102,57 +102,29 @@ flowchart TD
 - Results are exposed through a FastAPI backend and visualized in a Kotlin-based Android application, enabling operators to receive actionable maintenance intelligence in real time.
 
 # Hardware Components
-
-```mermaid
-flowchart LR
-
-subgraph H1["Arduino UNO R4 WiFi"]
-A["Main Controller"]
-end
-
-subgraph H2["ADXL345"]
-B["Vibration Monitoring"]
-end
-
-subgraph H3["DHT11"]
-C["Temperature & Humidity"]
-end
-
-subgraph H4["Relay Module"]
-D["Machine Shutdown"]
-end
-
-subgraph H5["Buzzer"]
-E["Emergency Alert"]
-end
-
-subgraph H6["LED Indicators"]
-F["System Status"]
-end
-```
+## Component	           ## Purpose
+Arduino UNO R4           WiFi	Main Controller
+ADXL345	                 Vibration Monitoring
+DHT11	                   Temperature & Humidity Monitoring
+Relay Module	           Machine Shutdown
+Active Buzzer	           Alert Generation
+LEDs	                   Status Indicators
 
 # Software Stack
-
-```mermaid
-flowchart LR
-
-subgraph S1["Embedded Layer"]
-A["Arduino IDE<br/>C++ Firmware"]
-end
-
-subgraph S2["AI Layer"]
-B["Python<br/>Scikit-Learn<br/>Isolation Forest"]
-end
-
-subgraph S3["Backend Layer"]
-C["FastAPI<br/>Uvicorn"]
-end
-
-subgraph S4["Mobile Layer"]
-D["Kotlin<br/>Jetpack Compose<br/>Retrofit"]
-end
-
-subgraph S5["Intelligence Layer"]
-E["LLM Engine<br/>Root Cause Analysis"]
-end
-```
+## Embedded Layer
+- Arduino IDE
+- C++
+# AI Layer
+- Python
+- Scikit-Learn
+- Isolation Forest
+- Backend
+- FastAPI
+- Uvicorn
+# Mobile App
+- Kotlin
+- Jetpack Compose
+- Retrofit
+# Intelligence Layer
+- LLM-based diagnostic engine
+- Predictive maintenance recommendations
