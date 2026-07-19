@@ -46,48 +46,47 @@ ForgeMind introduces an AI-driven pipeline that continuously monitors machine he
 # System Architecture
 
 ```mermaid
-flowchart TD
+sequenceDiagram
 
-    A[Industrial Machine]
+    participant Sensor
+    participant Arduino
+    participant ML
+    participant LLM
+    participant API
+    participant Android
 
-    A --> B[ADXL345 Vibration Sensor]
-    A --> C[DHT11 Temperature & Humidity Sensor]
+    Sensor->>Arduino: Temperature + Vibration Data
 
-    B --> D[Arduino UNO R4 WiFi]
-    C --> D
+    Arduino->>Arduino: Safety Checks
 
-    D --> E[Safety Layer]
+    alt Critical Threshold Crossed
 
-    E --> F{Threshold Check}
+        Arduino->>Arduino: Relay OFF
+        Arduino->>Arduino: Buzzer ON
 
-    F -->|Critical| G[Relay OFF]
-    F -->|Critical| H[Buzzer ON]
-    F -->|Critical| I[Red LED]
+    end
 
-    D --> J[Serial Data Stream]
+    Arduino->>ML: Sensor Stream
 
-    J --> K[Python Anomaly Detection]
+    ML->>ML: Isolation Forest Inference
 
-    K --> L[Isolation Forest Model]
+    alt Healthy
 
-    L -->|Healthy| M[Continue Monitoring]
+        ML->>ML: Continue Monitoring
 
-    L -->|Anomaly| N[Raw Sensor Packet]
+    else Anomaly
 
-    N --> O[LLM Diagnostic Engine]
+        ML->>LLM: Raw Sensor Packet
 
-    O --> P[Root Cause Analysis]
-    O --> Q[Maintenance Recommendations]
-    O --> R[Severity Assessment]
+        LLM->>LLM: Root Cause Analysis
 
-    P --> S[FastAPI Backend]
-    Q --> S
-    R --> S
+        LLM->>API: Diagnosis
 
-    S --> T[Android Application]
+        API->>Android: Results
 
-    T --> U[Live Diagnosis Dashboard]
-    T --> V[Image Upload]
+    end
+
+```
     T --> W[Audio Upload]
     T --> X[Audio Recording]
 
