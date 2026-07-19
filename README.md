@@ -7,12 +7,12 @@ ForgeMind is an intelligent industrial monitoring and predictive maintenance pla
 
 ## Industrial machinery often fails due to:
 
-Excessive vibration
-Overheating
-Bearing wear
-Shaft misalignment
-Mechanical imbalance
-Poor maintenance schedules
+- Excessive vibration
+- Overheating
+- Bearing wear
+- Shaft misalignment
+- Mechanical imbalance
+- Poor maintenance schedules
 
 Traditional threshold-based systems only react after a fault becomes severe.
 
@@ -101,14 +101,13 @@ flowchart TD
 
 - Results are exposed through a FastAPI backend and visualized in a Kotlin-based Android application, enabling operators to receive actionable maintenance intelligence in real time.
 
-# Hardware Components
-## Component	           ## Purpose
-Arduino UNO R4           WiFi	Main Controller
-ADXL345	                 Vibration Monitoring
-DHT11	                   Temperature & Humidity Monitoring
-Relay Module	           Machine Shutdown
-Active Buzzer	           Alert Generation
-LEDs	                   Status Indicators
+# Hardware Components           
+- Arduino UNO R4           
+- ADXL345	                 
+- DHT11	                   
+- Relay Module	           
+- Active Buzzer	           
+- LEDs	                   
 
 # Software Stack
 ## Embedded Layer
